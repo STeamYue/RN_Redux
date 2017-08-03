@@ -3,15 +3,28 @@ import {
     Text,
     View,
     StyleSheet,
+    TouchableOpacity,
 } from 'react-native';
 export default class TodoListComponent extends Component{
   constructor(props)
+      {
+        super(props);
+        this.state =
+        {
+          todoList:this.props.todoList||[],
+        };
+      }
+  // 接受新数据，更新状态显示
+  componentWillReceiveProps(newProps)
+      {
+        this.setState({
+            todoList: newProps.todoList || [],
+        });
+      }
+  // 点击事件，传回父组件，执行相应处理
+  toggleTodo(index)
   {
-    super(props);
-    this.state =
-    {
-      todoList:this.props.todoList,
-    };
+      this.props.toggleTodo && this.props.toggleTodo(index);
   }
   render(){
     return(
@@ -23,7 +36,13 @@ export default class TodoListComponent extends Component{
                 var finishStyle = {textDecorationLine:'line-through',
                                                 color:'gray'};
                 return (
-                  <Text style={[styles.todo,todo.status&&finishStyle]}>{todo.title}</Text>
+                  <TouchableOpacity 
+                      onPress={()=>{this.toggleTodo(index)}}
+                      >
+                     <Text  style={[styles.todo,todo.status&&finishStyle]}>
+                       {todo.title}
+                     </Text>
+                  </TouchableOpacity>
                 );
               }
             )
